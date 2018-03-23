@@ -5,48 +5,37 @@
  * Date: 23/03/18
  * Time: 15:55
  */
-    include 'header.php';
+include 'header.php';
+require 'verif.php';
 
-    require 'connec.php';
-    $pdo = new PDO(DSN, USER, PASS);
+require 'connec.php';
+$pdo = new PDO(DSN, USER, PASS);
 
 
-    if (!empty($_POST)) {
-        // verification d'erreur coté serveur
-        if (empty($_POST['title'])) {
-            $errors[] = 'Le champ title ne doit pas etre vide';
-        }
-
-        if (empty($_POST['message'])) {
-            $errors[] = 'Le champ message ne doit pas etre vide';
-        }
-
-        if (empty($_POST['author'])) {
-            $errors[] = 'Le champ author ne doit pas etre vide';
-        }
-
-        if (!empty($errors)) {
-            var_dump($errors);
-        } else {
-            // si pas d'erreur, insert en bdd
-
-            $query = "INSERT INTO article (title, message, author) 
+if (!empty($_POST)) {
+    // verification d'erreur coté serveur
+    $errors = checkError($_POST);
+    // si pas d'erreur, insert en bdd
+    if (!empty($errors)) {
+        var_dump($errors);
+    } else {
+        $query = "INSERT INTO article (title, message, author) 
                               VALUES (:title, :message, :author)";
-            $prep = $pdo->prepare($query);
+        $prep = $pdo->prepare($query);
 
-            $prep->bindValue(':title', trim($_POST['title']), PDO::PARAM_STR);
-            $prep->bindValue(':message', trim(htmlentities($_POST['message'])), PDO::PARAM_STR);
-            $prep->bindValue(':author', trim($_POST['author']), PDO::PARAM_STR);
-            $prep->execute();
+        $prep->bindValue(':title', trim($_POST['title']), PDO::PARAM_STR);
+        $prep->bindValue(':message', trim(htmlentities($_POST['message'])), PDO::PARAM_STR);
+        $prep->bindValue(':author', trim($_POST['author']), PDO::PARAM_STR);
+        $prep->execute();
 
-            header('Location: index.php');
-            exit();
+        header('Location: index.php');
+        exit();
 
-        }
     }
+}
 ?>
 
-<h1>Add an article</h1>
+    <h1>Add an article</h1>
 
     <form action="" method="post" role="form">
 
@@ -71,5 +60,5 @@
 
 
 <?php
-    include 'footer.php';
+include 'footer.php';
 ?>

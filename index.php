@@ -18,6 +18,8 @@
                 <h2><a href="show.php?id=<?=$article['id']?>"><?=htmlentities($article['title'])?></a></h2>
                 <p><?=htmlentities($article['message'])?></p>
                 <p><?=htmlentities($article['author'])?></p>
+
+                <a href="update.php?id=<?=$article['id']?>" class="btn btn-info">Edit</a>
                 <form action="delete.php" method="POST">
                     <input type="hidden" name="id" value="<?=$article['id']?>"/>
                     <button type="submit" class="btn btn-danger">Delete</button>
